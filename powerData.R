@@ -1,20 +1,11 @@
-.powerData <- NULL
+url <- "https://d396qusza40orc.cloudfront.net/exdata%2Fdata%2Fhousehold_power_consumption.zip"
+zipfile <- "data/household_power_consumption.zip"
+if(!file.exists(zipfile)) { download.file(url, destfile = zipfile, method = "curl", quiet = TRUE) }
+txtfile <- "data/household_power_consumption.txt"
+if(!file.exists(txtfile)) { unzip(zipfile, exdir = "data") }
 
-powerData <- function() {
-  if(is.null(.powerData)) {
-    fullData <- read.table(
-      "household_power_consumption.txt",
-      header=T,
-      sep=";",
-      na.strings="?",
-      stringsAsFactors=F
-    )
-
-    filtered <- subset(fullData, Date == "1/2/2007" | Date == "2/2/2007")
-    filtered$DateTime <-
-      strptime(paste(filtered$Date, filtered$Time), format="%d/%m/%Y %H:%M:%S")
-
-    .powerData <<- filtered
-  }
-  .powerData
+library(sqldf)
+if(!exists("PowerData")) {
+  PowerData <- read.csv2.sql(txtfile, 'SELECT * FROM file WHERE Date IN ("1/2/2007", "2/2/2007")')
+  PowerData$DateTime <- with(PowerData, strptime(paste(Date, Time), "%d/%m/%Y %X"))
 }

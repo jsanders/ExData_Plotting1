@@ -1,1 +1,5 @@
-household_power_consumption.txt
+data/*
+.RData
+.RHistory
+notebook.html
+notebook.md
