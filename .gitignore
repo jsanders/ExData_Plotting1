@@ -3,3 +3,5 @@ data/*
 .RHistory
 notebook.html
 notebook.md
+notebook_cache
+notebook_files
